@@ -66,6 +66,7 @@ add-files: [
   
   # /usr/lib
   ["../sysroot/usr/lib/sodalite-buildinfo", "/usr/lib/sodalite-buildinfo"],
+  ["../sysroot/usr/lib/systemd/user/io.elementary.files.xdg-desktop-portal.service", "/usr/lib/systemd/user/io.elementary.files.xdg-desktop-portal.service"],
   
   # /usr/lib64
   ["../sysroot/usr/lib64/switchboard/personal/security-privacy-plug-helper", "/usr/lib64/switchboard/personal/security-privacy-plug-helper"],
@@ -85,6 +86,8 @@ add-files: [
 
   # /usr/share
   ["../sysroot/usr/share/touchegg/touchegg.conf", "/usr/share/touchegg/touchegg.conf"],
+  ["../sysroot/usr/share/dbus-1/services/org.freedesktop.impl.portal.desktop.elementary.files.service", "/usr/share/dbus-1/services/org.freedesktop.impl.portal.desktop.elementary.files.service"],
+  ["../sysroot/usr/share/xdg-desktop-portal/portals/io.elementary.files.portal", "/usr/share/xdg-desktop-portal/portals/io.elementary.files.portal"],
 
   # /usr/share/applications
   ["../sysroot/usr/share/applications/firewall-config.desktop", "/usr/share/applications/firewall-config.desktop"],

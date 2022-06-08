@@ -266,6 +266,8 @@ declare -a to_remove=(
     "/usr/share/bookmarks/"
     "/usr/share/icewm/"
     "/usr/share/pixmaps/faces/"
+    #"/usr/share/xdg-desktop-portal/portals/gnome.portal"
+    #"/usr/share/xdg-desktop-portal/portals/gnome-shell.portal"
 )
 
 if [[ $variant != "experimental-pantheon-nightly" ]]; then

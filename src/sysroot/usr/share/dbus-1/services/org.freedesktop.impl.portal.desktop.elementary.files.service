@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.freedesktop.impl.portal.desktop.elementary.files
+#Exec=/usr/lib/x86_64-linux-gnu/io.elementary.files.xdg-desktop-portal
+Exec=/usr/libexec/xdg-desktop-portal-pantheon
+SystemdService=io.elementary.files.xdg-desktop-portal.service
