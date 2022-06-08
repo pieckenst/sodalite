@@ -111,6 +111,8 @@ add-files: [
 
   # /usr/share/icons
   ["../../lfs/logo/logo.png", "/usr/share/icons/hicolor/256x256/apps/fedora-logo-icon.png"],
+  ["../../lfs/logo/logo.svg", "/usr/share/icons/elementary/places/128/logo.svg"],
+  ["../../lfs/logo/logo-symbolic.svg", "/usr/share/icons/elementary/places/symbolic/logo-symbolic.svg"],
   ["../../lib/elementary.icons/apps/128/system-software-install.svg", "/usr/share/icons/elementary/apps/128/system-software-install.svg"],
   ["../../lib/elementary.icons/apps/16/system-software-install.svg", "/usr/share/icons/elementary/apps/16/system-software-install.svg"],
   ["../../lib/elementary.icons/apps/24/system-software-install.svg", "/usr/share/icons/elementary/apps/24/system-software-install.svg"],

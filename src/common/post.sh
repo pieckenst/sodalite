@@ -93,6 +93,7 @@ set_property /usr/lib/os-release "DOCUMENTATION_URL" "https:\/\/sodalite.rocks\/
 set_property /usr/lib/os-release "HOME_URL" "https:\/\/sodalite.rocks"
 set_property /usr/lib/os-release "ID" "sodalite"
 set_property /usr/lib/os-release "ID_LIKE" "fedora"
+set_property /usr/lib/os-release "LOGO" "distributor-logo"
 set_property /usr/lib/os-release "NAME" "Sodalite"
 set_property /usr/lib/os-release "PRETTY_NAME" "$pretty_name"
 set_property /usr/lib/os-release "SUPPORT_URL" "https:\/\/sodalite.rocks\/support"
@@ -288,6 +289,12 @@ done
 
 # Sets background for System (in Switchboard) to use behind the logo
 ln -s $(get_property /usr/share/glib-2.0/schemas/io.elementary.desktop.gschema.override picture-uri | sed -E 's/file:\/\///' | sed -E "s/'//g") /usr/share/backgrounds/elementaryos-default
+
+ln -s /usr/share/icons/elementary/places/128/logo.svg /usr/share/icons/elementary/places/64/logo.svg
+ln -s /usr/share/icons/elementary/places/128/logo.svg /usr/share/icons/elementary/places/48/logo.svg
+ln -s /usr/share/icons/elementary/places/128/logo.svg /usr/share/icons/elementary/places/32/logo.svg
+ln -s /usr/share/icons/elementary/places/128/logo.svg /usr/share/icons/elementary/places/24/logo.svg
+ln -s /usr/share/icons/elementary/places/128/logo.svg /usr/share/icons/elementary/places/16/logo.svg
 
 glib-compile-schemas /usr/share/glib-2.0/schemas
 
