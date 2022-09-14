@@ -4,7 +4,7 @@
 variant=$1
 working_dir=$2
 base_dir="$(dirname "$(realpath -s "$0")")"
-buildinfo_file="$base_dir/src/sysroot/usr/lib/sodalite-buildinfo"
+buildinfo_file="$base_dir/src/sysroot/common/usr/lib/sodalite-buildinfo"
 tests_dir="$base_dir/tests"
 start_time=$(date +%s)
 
@@ -19,7 +19,10 @@ function cleanup() {
 
     rm -f $buildinfo_file
     rm -rf  /var/tmp/rpm-ostree.*
-    chown -R $SUDO_USER:$SUDO_USER $working_dir
+
+    if [[ $SUDO_USER != "" ]]; then
+        chown -R $SUDO_USER:$SUDO_USER $working_dir
+    fi
 }
 
 function print_time() {
@@ -66,7 +69,7 @@ echo "🪛 Setting up..."
 ostree_cache_dir="$working_dir/cache"
 ostree_repo_dir="$working_dir/repo"
 lockfile="$base_dir/src/common/overrides.yaml"
-treefile="$base_dir/src/sodalite-$variant.yaml"
+treefile="$base_dir/src/treefiles/sodalite-$variant.yaml"
 
 ref="$(echo "$(cat "$treefile")" | grep "ref:" | sed "s/ref: //" | sed "s/\${basearch}/$(uname -m)/")"
 
@@ -93,10 +96,10 @@ if [ ! "$(ls -A $ostree_repo_dir)" ]; then
 fi
 
 buildinfo_content="BUILD_DATE=\"$(date +"%Y-%m-%d %T %z")\"
+\nBUILD_HOST_KERNEL=\"$(uname -srp)\"
 \nBUILD_HOST_NAME=\"$(hostname -f)\"
 \nBUILD_HOST_OS=\"$(cat /usr/lib/os-release | grep "PRETTY_NAME" | sed "s/PRETTY_NAME=//" | tr -d '"')\"
-\nBUILD_HOST_KERNEL=\"$(uname -srp)\"
-\nBUILD_RPMOSTREE=\"rpm-ostree $(echo "$(rpm-ostree --version)" | grep "Version:" | sed "s/ Version: //" | tr -d "'")+$(echo "$(rpm-ostree --version)" | grep "Git:" | sed "s/ Git: //")\"
+\nBUILD_TOOL=\"rpm-ostree $(echo "$(rpm-ostree --version)" | grep "Version:" | sed "s/ Version: //" | tr -d "'")+$(echo "$(rpm-ostree --version)" | grep "Git:" | sed "s/ Git: //")\"
 \nGIT_COMMIT=$git_commit
 \nGIT_TAG=$git_tag
 \nREF=\"$ref\"
@@ -156,13 +159,13 @@ if [[ -d $tests_dir ]]; then
 fi
 
 if (( $test_failed_count > 0 )); then
+    die "Failed to satisfy tests ($test_failed_count failed). Removing commit '$commit'..."
+
     if [[ -z $commit_prev ]]; then
         ost refs --delete $ref
     else
         ost reset $ref $commit_prev
     fi
-
-    die "Failed to satisfy tests ($test_failed_count failed). Removed commit '$commit'"
 else
     echo "✏️ Generating summary..."
     ost summary --update

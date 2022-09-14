@@ -42,6 +42,9 @@ function set_property() {
 
 set -xeuo pipefail
 
+variant=""
+version_tag=""
+
 if [[ $(cat $buildinfo_file) != "" ]]; then
     [[ -z $(get_property $buildinfo_file "GIT_TAG") ]] && \
         version_tag="$(get_property $buildinfo_file "GIT_COMMIT")"
@@ -61,7 +64,12 @@ if [[ $(get_property /etc/os-release VERSION) =~ (([0-9]{1,3})-([0-9]{2}.[0-9]{1
 
     [[ ${BASH_REMATCH[5]} > 0 ]] && version+=".${BASH_REMATCH[5]}"
     [[ ! -z $version_tag ]] && version+="+$version_tag"
-    [[ ! -z $variant ]] && [[ $variant != "base" ]] && version_pretty="$version ($variant)"
+
+    if [[ ! -z $variant ]] && [[ $variant != "base" ]]; then
+        version_pretty="$version ($variant)"
+    else
+        version_pretty="$version"
+    fi
 
     cpe+=":$version_id:$(echo $version | cut -f2- -d"-")"
 else
@@ -176,6 +184,14 @@ fi
 #       (see https://github.com/sodaliterocks/sodalite/issues/9#issuecomment-1010384738)
 
 declare -a to_remove=(
+    # desktop-backgrounds-compat
+    "/usr/share/backgrounds/default.png"
+    "/usr/share/backgrounds/default.xml"
+    "/usr/share/backgrounds/images"
+    "/usr/share/backgrounds/images/default-16_10.png"
+    "/usr/share/backgrounds/images/default-16_9.png"
+    "/usr/share/backgrounds/images/default-5_4.png"
+    "/usr/share/backgrounds/images/default.png"
     # evolution-data-server
     "/etc/xdg/autostart/org.gnome.Evolution-alarm-notify.desktop"
     "/usr/libexec/evolution-data-server/evolution-alarm-notify"
@@ -246,6 +262,12 @@ declare -a to_remove=(
     "/usr/share/wayland-sessions/gnome-wayland.desktop"
     "/usr/share/xsessions/gnome.desktop"
     "/usr/share/xsessions/gnome-xorg.desktop"
+    # gnome-themes-extra
+    "/usr/share/doc/gnome-themes-extra/"
+    "/usr/share/licenses/gnome-themes-extra/"
+    "/usr/share/themes/Adwaita-dark/"
+    "/usr/share/themes/Adwaita/"
+    "/usr/share/themes/HighContrast/"
     # light-locker
     "/etc/xdg/autostart/light-locker.desktop"
     # plank
@@ -263,12 +285,28 @@ declare -a to_remove=(
     "/usr/share/man/man8/ufw.8.gz"
     "/usr/share/ufw/"
     # misc.
+    "/usr/share/backgrounds/f36/"
     "/usr/share/bookmarks/"
     "/usr/share/icewm/"
     "/usr/share/pixmaps/faces/"
     #"/usr/share/xdg-desktop-portal/portals/gnome.portal"
     #"/usr/share/xdg-desktop-portal/portals/gnome-shell.portal"
 )
+
+if [[ $variant == "experimental-alt-greeter" ]]; then
+    to_remove+=(
+        # elementary-greeter
+        "/etc/lightdm/io.elementary.greeter.conf"
+        "/etc/lightdm/lightdm.conf.d/40-io.elementary.greeter.conf"
+        "/usr/bin/io.elementary.greeter-compositor"
+        "/usr/sbin/io.elementary.greeter"
+        "/usr/share/doc/elementary-greeter/"
+        "/usr/share/licenses/elementary-greeter/"
+        "/usr/share/locale/*/LC_MESSAGES/io.elementary.greeter.mo"
+        "/usr/share/metainfo/io.elementary.greeter.appdata.xml"
+        "/usr/share/xgreeters/io.elementary.greeter.desktop"
+    )
+fi
 
 if [[ $variant != "experimental-pantheon-nightly" ]]; then
     # These Pantheon packages are considered broken, so we'll only keep them
@@ -293,6 +331,7 @@ ln -s $(get_property /usr/share/glib-2.0/schemas/io.elementary.desktop.gschema.o
 
 # Updates schemas
 glib-compile-schemas /usr/share/glib-2.0/schemas
+dconf update
 
 # Sets up Software wrapper
 mv /usr/bin/gnome-software /usr/bin/gnome-software-bin
