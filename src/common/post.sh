@@ -306,6 +306,18 @@ if [[ $core == "pantheon" ]]; then
         "/usr/share/pixmaps/faces/"
     )
 
+    if [ $version_id -gt 36 ]; then
+        # Indicators are broken on f37+
+        to_remove+=(
+            "/etc/xdg/autostart/indicator-application.desktop"
+            "/usr/lib64/switchboard/personal/libindicators.so"
+            "/usr/lib64/wingpanel/libayatana.so"
+            "/usr/lib/indicators3/7/libapplication.so"
+            "/usr/lib/systemd/user/indicator-application.service"
+            "/usr/lib64/indicator-application/indicator-application-service"
+        )
+    fi
+
     if [[ $variant != "experimental-pantheon-nightly" ]]; then
         # These Pantheon packages are considered broken, so we'll only keep them
         # for this variant
@@ -337,6 +349,7 @@ fi
 
 to_remove+=(
     "/usr/share/backgrounds/f36"
+    "/usr/share/backgrounds/f37"
     "/usr/share/backgrounds/fedora-workstation"
 )
 
@@ -353,9 +366,9 @@ wallpaper=""
 case $version_id in
     35) wallpaper="karsten-wurth-7BjhtdogU3A-unsplash" ;;
     36) wallpaper="max-okhrimenko-R-CoXmMrWFk-unsplash" ;;
+    37) wallpaper="jeremy-gerritsen-_iviuukstI4-unsplash" ;;
     38) wallpaper="zara-walker-_pC5hT6aXfs-unsplash" ;;
     39) wallpaper="jack-b-vcNPMwS08UI-unsplash" ;;
-    40) wallpaper="jeremy-gerritsen-_iviuukstI4-unsplash"
 esac
 
 if [[ -f "/usr/share/backgrounds/default/$wallpaper.jpg" ]]; then
